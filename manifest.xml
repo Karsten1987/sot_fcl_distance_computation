@@ -1,0 +1,20 @@
+<package>
+  <description brief="sot_fcl_distance_computation">
+
+     sot_fcl_distance_computation
+
+  </description>
+  <author>student</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/sot_fcl_distance_computation</url>
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="kdl"/>
+  <depend package="kdl_parser"/>
+  <depend package="urdf" />
+  <depend package="geometric_shapes" />
+
+</package>
+
+
