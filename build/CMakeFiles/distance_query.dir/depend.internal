@@ -3,9 +3,6 @@
 
 CMakeFiles/distance_query.dir/src/distance_query.o
  ../include/sot_fcl_distance_computation/DistanceComputation.h
- ../include/sot_fcl_distance_computation/conversions.h
- ../include/sot_fcl_distance_computation/kdl_tools.h
- ../include/sot_fcl_distance_computation/math_utils.h
  /home/student/reem_ros_control/sot_fcl_distance_computation/src/distance_query.cpp
  /opt/ros/fuerte/include/XmlRpcDecl.h
  /opt/ros/fuerte/include/XmlRpcValue.h
@@ -85,8 +82,6 @@ CMakeFiles/distance_query.dir/src/distance_query.o
  /opt/ros/fuerte/include/urdf_parser/urdf_parser.h
  /opt/ros/fuerte/include/visualization_msgs/Marker.h
  /opt/ros/fuerte/include/visualization_msgs/MarkerArray.h
- /opt/ros/fuerte/stacks/arm_navigation/geometric_shapes/include/geometric_shapes/shape_operations.h
- /opt/ros/fuerte/stacks/arm_navigation/geometric_shapes/include/geometric_shapes/shapes.h
  /opt/ros/fuerte/stacks/bullet/include/LinearMath/btMatrix3x3.h
  /opt/ros/fuerte/stacks/bullet/include/LinearMath/btMinMax.h
  /opt/ros/fuerte/stacks/bullet/include/LinearMath/btQuadWord.h
@@ -96,6 +91,8 @@ CMakeFiles/distance_query.dir/src/distance_query.o
  /opt/ros/fuerte/stacks/bullet/include/LinearMath/btVector3.h
  /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Matrix3x3.h
  /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/MinMax.h
+ /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/QuadWord.h
+ /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Quaternion.h
  /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Scalar.h
  /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Transform.h
  /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Vector3.h
@@ -124,18 +121,8 @@ CMakeFiles/distance_query.dir/src/distance_query.o
  /opt/ros/fuerte/stacks/robot_model/urdf/include/urdf/model.h
  /opt/ros/fuerte/stacks/robot_model/urdf_interface/include/urdf_interface/link.h
  /opt/ros/fuerte/stacks/robot_model/urdf_interface/include/urdf_interface/model.h
- /usr/include/eigen3/Eigen/Cholesky
  /usr/include/eigen3/Eigen/Core
  /usr/include/eigen3/Eigen/Eigen2Support
- /usr/include/eigen3/Eigen/Eigenvalues
- /usr/include/eigen3/Eigen/Geometry
- /usr/include/eigen3/Eigen/Householder
- /usr/include/eigen3/Eigen/Jacobi
- /usr/include/eigen3/Eigen/LU
- /usr/include/eigen3/Eigen/QR
- /usr/include/eigen3/Eigen/SVD
- /usr/include/eigen3/Eigen/src/Cholesky/LDLT.h
- /usr/include/eigen3/Eigen/src/Cholesky/LLT.h
  /usr/include/eigen3/Eigen/src/Core/../plugins/ArrayCwiseBinaryOps.h
  /usr/include/eigen3/Eigen/src/Core/../plugins/ArrayCwiseUnaryOps.h
  /usr/include/eigen3/Eigen/src/Core/../plugins/BlockMethods.h
@@ -235,71 +222,11 @@ CMakeFiles/distance_query.dir/src/distance_query.o
  /usr/include/eigen3/Eigen/src/Eigen2Support/Block.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/Cwise.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/CwiseOperators.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/AlignedBox.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/All.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/AngleAxis.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Hyperplane.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/ParametrizedLine.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Quaternion.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Rotation2D.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/RotationBase.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Scaling.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Transform.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Translation.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/LU.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/Lazy.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/Macros.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/MathFunctions.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/Memory.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/Meta.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/Minor.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/QR.h
- /usr/include/eigen3/Eigen/src/Eigen2Support/SVD.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/TriangularSolver.h
  /usr/include/eigen3/Eigen/src/Eigen2Support/VectorBlock.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/./ComplexSchur.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/./EigenvaluesCommon.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/./HessenbergDecomposition.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/./RealSchur.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/./Tridiagonalization.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/ComplexEigenSolver.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h
- /usr/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h
- /usr/include/eigen3/Eigen/src/Geometry/AlignedBox.h
- /usr/include/eigen3/Eigen/src/Geometry/AngleAxis.h
- /usr/include/eigen3/Eigen/src/Geometry/EulerAngles.h
- /usr/include/eigen3/Eigen/src/Geometry/Homogeneous.h
- /usr/include/eigen3/Eigen/src/Geometry/Hyperplane.h
- /usr/include/eigen3/Eigen/src/Geometry/OrthoMethods.h
- /usr/include/eigen3/Eigen/src/Geometry/ParametrizedLine.h
- /usr/include/eigen3/Eigen/src/Geometry/Quaternion.h
- /usr/include/eigen3/Eigen/src/Geometry/Rotation2D.h
- /usr/include/eigen3/Eigen/src/Geometry/RotationBase.h
- /usr/include/eigen3/Eigen/src/Geometry/Scaling.h
- /usr/include/eigen3/Eigen/src/Geometry/Transform.h
- /usr/include/eigen3/Eigen/src/Geometry/Translation.h
- /usr/include/eigen3/Eigen/src/Geometry/Umeyama.h
- /usr/include/eigen3/Eigen/src/Geometry/arch/Geometry_SSE.h
- /usr/include/eigen3/Eigen/src/Householder/BlockHouseholder.h
- /usr/include/eigen3/Eigen/src/Householder/Householder.h
- /usr/include/eigen3/Eigen/src/Householder/HouseholderSequence.h
- /usr/include/eigen3/Eigen/src/Jacobi/Jacobi.h
- /usr/include/eigen3/Eigen/src/LU/Determinant.h
- /usr/include/eigen3/Eigen/src/LU/FullPivLU.h
- /usr/include/eigen3/Eigen/src/LU/Inverse.h
- /usr/include/eigen3/Eigen/src/LU/PartialPivLU.h
- /usr/include/eigen3/Eigen/src/LU/arch/Inverse_SSE.h
- /usr/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h
- /usr/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h
- /usr/include/eigen3/Eigen/src/QR/HouseholderQR.h
- /usr/include/eigen3/Eigen/src/SVD/JacobiSVD.h
- /usr/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h
- /usr/include/eigen3/Eigen/src/misc/Image.h
- /usr/include/eigen3/Eigen/src/misc/Kernel.h
- /usr/include/eigen3/Eigen/src/misc/Solve.h

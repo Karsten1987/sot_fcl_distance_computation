@@ -92,8 +92,6 @@ CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/fuerte/stacks/bullet/include/LinearMath/btVector3.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Matrix3x3.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/MinMax.h
-CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/QuadWord.h
-CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Quaternion.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Scalar.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Transform.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /opt/ros/fuerte/stacks/geometry/tf/include/tf/LinearMath/Vector3.h
@@ -238,6 +236,7 @@ CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /usr/incl
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/AngleAxis.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Hyperplane.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/ParametrizedLine.h
+CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Quaternion.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Rotation2D.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/RotationBase.h
 CMakeFiles/sot_fcl_distance_computation.dir/src/DistanceComputation.o: /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/Scaling.h

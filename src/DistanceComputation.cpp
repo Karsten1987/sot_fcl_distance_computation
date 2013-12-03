@@ -1,44 +1,10 @@
-#include <boost/smart_ptr/shared_ptr.hpp>
+#include <sot_fcl_distance_computation/DistanceComputation.h>
 #include <fcl/BV/OBBRSS.h>
 #include <fcl/BVH/BVH_model.h>
-#include <fcl/collision_data.h>
-#include <fcl/collision_object.h>
-#include <fcl/data_types.h>
-#include <fcl/distance.h>
-#include <fcl/math/math_details.h>
-#include <fcl/math/matrix_3f.h>
-#include <fcl/math/transform.h>
-#include <fcl/math/vec_3f.h>
-#include <fcl/shape/geometric_shapes.h>
-#include <geometric_shapes/shape_operations.h>
-#include <geometric_shapes/shapes.h>
-#include <kdl/frames.hpp>
-#include <kdl/jntarray.hpp>
-#include <kdl/segment.hpp>
-#include <kdl/tree.hpp>
-#include <kdl/treefksolverpos_recursive.hpp>
-#include <kdl_parser/kdl_parser.hpp>
-#include <ros/console.h>
-#include <ros/time.h>
 #include <sot_fcl_distance_computation/conversions.h>
 #include <sot_fcl_distance_computation/kdl_tools.h>
-#include <sensor_msgs/JointState.h>
-#include <tf/LinearMath/Transform.h>
-#include <tf/transform_broadcaster.h>
-#include <tf/transform_datatypes.h>
-#include <urdf/model.h>
-#include <urdf_model/joint.h>
-#include <urdf_model/link.h>
-#include <urdf_model/model.h>
-#include <urdf_model/pose.h>
-#include <string>
-#include <vector>
-
-#include <fcl/narrowphase/gjk.h>
-#include <fcl/narrowphase/gjk_libccd.h>
-#include <fcl/narrowphase/narrowphase.h>
-
-#include <sot_fcl_distance_computation/DistanceComputation.h>
+#include <geometric_shapes/shapes.h>
+#include <geometric_shapes/shape_operations.h>
 
 using namespace distance;
 
@@ -90,7 +56,7 @@ void DistanceComputation::printLinks() {
 void DistanceComputation::printJoints() {
 	ROS_INFO("Printing Joint Information");
 	ROS_INFO("Total Amount of Joints: %d", joint_states_.size());
-	for (int var = 0; var < joint_states_.size(); ++var) {
+	for (unsigned int var = 0; var < joint_states_.size(); ++var) {
 		ROS_INFO("joint order: %s, with value: %f", joint_names_[var].c_str(),
 				joint_states_[var]);
 	}
@@ -104,6 +70,7 @@ void DistanceComputation::filter_free_flyer(
 
 		std::string joint_name = std::string(joints_msg->name[i]);
 		size_t baseFound = joint_name.find("base_joint_");
+//		size_t baseFound = joint_name.find("WAIST_");
 		if (baseFound == std::string::npos) {
 
 			joint_states_.push_back(joints_msg->position[i]);
@@ -149,14 +116,8 @@ bool DistanceComputation::parseCollisionObjects(
 				boost::shared_ptr<urdf::Cylinder> collisionGeometry =
 						boost::dynamic_pointer_cast<urdf::Cylinder>(
 								link->collision->geometry);
-//				!! BRUTAL HACK
-				boost::shared_ptr<fcl::Capsule> capsule;
-				if (link->name == "hokuyo_link") {
-					std::cerr << "hokuyo_link modelled as 0 length";
-					capsule = boost::shared_ptr<fcl::Capsule>(new fcl::Capsule(collisionGeometry->radius, 0));
-				} else {
-					capsule = boost::shared_ptr<fcl::Capsule>(new fcl::Capsule(collisionGeometry->radius, collisionGeometry->length));
-				}
+
+				 boost::shared_ptr<fcl::Capsule>capsule = boost::shared_ptr<fcl::Capsule>(new fcl::Capsule(collisionGeometry->radius, collisionGeometry->length));
 
 				boost::shared_ptr<fcl::CollisionObject> collision_object(
 						new fcl::CollisionObject(capsule));
@@ -170,7 +131,44 @@ bool DistanceComputation::parseCollisionObjects(
 //				// Store the transformation of the center of the CollisionShape (URDF)
 				// Apply this transformation later in the update cycle to have the shape at the same origin as the link
 				convert(link->collision->origin, shape_frames[link->name]);
+				ROS_INFO("adding capsule for %s",link->name.c_str() );
 			}
+            else if(link->collision->geometry->type == urdf::Geometry::MESH){
+
+                boost::shared_ptr< ::urdf::Mesh> collisionGeometry = boost::dynamic_pointer_cast< ::urdf::Mesh> (link->collision->geometry);
+
+                shapes::Mesh *mesh = shapes::createMeshFromFilename(collisionGeometry->filename);
+
+                std::vector<fcl::Vec3f> vertices;
+                std::vector<fcl::Triangle> triangles;
+
+                for(unsigned int i=0; i < mesh->vertexCount; ++i){
+                    fcl::Vec3f v(mesh->vertices[3*i]*collisionGeometry->scale.x,
+                                 mesh->vertices[3*i + 1]*collisionGeometry->scale.y,
+                                 mesh->vertices[3*i + 2]*collisionGeometry->scale.z);
+
+                    vertices.push_back(v);
+                }
+
+                for(unsigned int i=0; i< mesh->triangleCount; ++i){
+                    fcl::Triangle t(mesh->triangles[3*i],
+                                    mesh->triangles[3*i + 1],
+                                    mesh->triangles[3*i + 2]);
+                    triangles.push_back(t);
+                }
+
+                // add the mesh data into the BVHModel structure
+                boost::shared_ptr<fcl::BVHModel<fcl::OBBRSS> > shape(new fcl::BVHModel<fcl::OBBRSS>);
+                shape->beginModel();
+                shape->addSubModel(vertices, triangles);
+                shape->endModel();
+
+                boost::shared_ptr<fcl::CollisionObject> collision_object(new fcl::CollisionObject(shape));
+                collision_objects_[link->name] = collision_object;
+                convert(link->collision->origin, shape_frames[link->name]);
+                ROS_INFO("adding mesh for %s",link->name.c_str() );
+
+            }
 		} else {
 			ROS_WARN_STREAM("Collision not defined for link: "<<link->name);
 		}
@@ -187,7 +185,7 @@ fcl::DistanceResult DistanceComputation::minimum_distance(std::string linkAname,
 	boost::shared_ptr<urdf::Link> linkB;
 	model_.getLink(linkBname, linkB);
 
-	printJoints();
+//	printJoints();
 
 	KDL::Frame kdlFrameA;
 	KDL::Frame kdlFrameB;
@@ -195,22 +193,38 @@ fcl::DistanceResult DistanceComputation::minimum_distance(std::string linkAname,
 	if (joint_states_.size() != tree_.getNrOfJoints()) {
 		ROS_ERROR_STREAM(
 				"There is a mismatch between the configured joints and the passed joints in no self collision of safety layer");
+		ROS_ERROR_STREAM("number of joint_states " << joint_states_.size());
+		ROS_ERROR_STREAM("number of tree joints " << tree_.getNrOfJoints());
+
 	}
 
 	convert(joint_states_, joints_kdl);
 
 	int resultbla = robot_fk_->JntToCart(joints_kdl, kdlFrameA, linkAname);
 	resultbla = robot_fk_->JntToCart(joints_kdl, kdlFrameB, linkBname);
+	std::cerr << "result of foward kinematic: " << resultbla << std::endl;
 
 	// Get all the Frames inside the origin of the link
 //	kdlFrameA = kdlFrameA * shape_frames[linkAname];
 //	kdlFrameB = kdlFrameB * shape_frames[linkBname];
 
-//Check for collision
+	kdlFrameB = kdlFrameB * KDL::Frame(KDL::Vector(0,0,-0.2));
+	//Check for collision
 	// t1, t2 will result in the new points computed by the forward kinematic
 	fcl::Transform3f t1, t2;
 	t1 = kdl2fcl(kdlFrameA);
 	t2 = kdl2fcl(kdlFrameB);
+
+//	if (linkA->collision->origin.position.z < 0){
+//		fcl::Vec3f tmp = t1.getTranslation();
+//		tmp.data[2] -= 0.2;
+//		t1.setTranslation(tmp);
+//	}
+//	if (linkB->collision->origin.position.z < 0){
+//		fcl::Vec3f tmp = t2.getTranslation();
+//		tmp.data[2] -= 0.2;
+//		t2.setTranslation(tmp);
+//		}
 
 	fcl::CollisionObject* obj1 = collision_objects_[linkAname].get();
 	fcl::CollisionObject* obj2 = collision_objects_[linkBname].get();
@@ -244,6 +258,7 @@ fcl::DistanceResult DistanceComputation::minimum_distance(std::string linkAname,
 		std::cerr << linkA->name << " is endeffector " << std::endl;
 		relativeP1M = t1.inverseTimes(p1Homo);
 	} else {
+		std::cerr << linkA->name << " with SoT compensation " << std::endl;
 		t1 = t1 * sot_compensation;
 		// check that inverseTimes doesn't modify *this
 		relativeP1M = t1.inverseTimes(p1Homo);
@@ -253,10 +268,17 @@ fcl::DistanceResult DistanceComputation::minimum_distance(std::string linkAname,
 		std::cerr << linkB->name << " is endeffector " << std::endl;
 		relativeP2M = t2.inverseTimes(p2Homo);
 	} else {
+		std::cerr << linkB->name << " with SoT compensation " << std::endl;
 		t2 = t2 * sot_compensation;
 		// check that inverseTimes doesn't modify *this
 		relativeP2M = t2.inverseTimes(p2Homo);
+		fcl::Transform3f shift;
+		shift.setTranslation(fcl::Vec3f(-0.2,0,0));
+		relativeP2M = relativeP2M*shift;
 	}
+
+	fcl::Transform3f blub2 = fcl::Transform3f(result.nearest_points[1]);
+	fcl::Transform3f blubb2 = fcl::Transform3f(fcl::Vec3f(0,0,-0.2));
 
 	relativeP1 = relativeP1M.getTranslation();
 	relativeP2 = relativeP2M.getTranslation();
@@ -265,28 +287,28 @@ fcl::DistanceResult DistanceComputation::minimum_distance(std::string linkAname,
 			<< std::endl;
 	std::cerr << "ORIGIN POINT " << linkAname << obj1->getTranslation()
 			<< std::endl;
-	std::cerr << "ORIGIN ROT " << linkAname << obj1->getRotation() << std::endl;
+//	std::cerr << "ORIGIN ROT " << linkAname << obj1->getRotation() << std::endl;
 	std::cerr << "RELATIVE POINT " << linkAname << relativeP1 << std::endl;
 
 	std::cerr << "NEAREST POINT " << linkBname << result.nearest_points[1]
 			<< std::endl;
 	std::cerr << "ORIGIN POINT " << linkBname << obj2->getTranslation()
 			<< std::endl;
-	std::cerr << "ORIGIN ROT " << linkBname << obj2->getRotation() << std::endl;
+//	std::cerr << "ORIGIN ROT " << linkBname << obj2->getRotation() << std::endl;
 	std::cerr << "RELATIVE POINT " << linkBname << relativeP2 << std::endl;
 
 	std::cerr << "RESULTING DISTANCE: " << result.min_distance << std::endl;
 
-	getTfcollisions(linkAname, "KDL_FORWARD_");
+//	getTfcollisions(linkAname, "KDL_FORWARD_");
 
 	tf::Transform tf;
-	convert(t1, tf);
+	convert(t2, tf);
 	br.sendTransform(
-			tf::StampedTransform(tf, ros::Time::now(), "world",
+			tf::StampedTransform(tf, ros::Time::now(), "base_link",
 					"debug_SOT_ORIGIN"));
 
 	/* BRUTAL HACK !!*/
-	relativeP1 = fcl::Vec3f();
+//	relativeP1 = fcl::Vec3f();
 //	result.nearest_points[1] = fcl::Vec3f(0.5,0.0,1.0);
 
 	return result;

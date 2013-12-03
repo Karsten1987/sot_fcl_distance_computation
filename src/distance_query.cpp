@@ -3,12 +3,12 @@
  @version 0.1 15/10/2013
  */
 
-#include <ros/ros.h>
+#include <sot_fcl_distance_computation/DistanceComputation.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <sensor_msgs/JointState.h>
-#include <sot_fcl_distance_computation/DistanceComputation.h>
-#include <fcl/distance.h>
+#include <geometry_msgs/Transform.h>
+//#include <fcl/distance.h>
 
 static const std::string JOINT_STATE_TOPIC = "/dynamic_graph/joint_states";
 static const std::string RESULT_MARKER_TOPIC = "distance_query/result_marker";

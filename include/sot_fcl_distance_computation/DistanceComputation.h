@@ -1,31 +1,14 @@
 // Author Karsten Knese
 
-#include <ros/ros.h>
-#include <map>
+#include <fcl/distance.h>
+#include <fcl/shape/geometric_shapes.h>
 #include <sensor_msgs/JointState.h>
 #include <kdl/tree.hpp>
 #include <kdl_parser/kdl_parser.hpp>
-#include <sot_fcl_distance_computation/kdl_tools.h>
-#include <sot_fcl_distance_computation/conversions.h>
-#include <urdf_parser/urdf_parser.h>
-
-
-#include "fcl/collision.h"
-
-#include <fcl/collision_object.h>
-#include <fcl/data_types.h>
-#include <fcl/distance.h>
-#include <fcl/shape/geometric_shapes.h>
-#include <fcl/shape/geometric_shape_to_BVH_model.h>
-#include <fcl/BV/OBBRSS.h>
-#include <fcl/BVH/BVH_model.h>
-#include <fcl/narrowphase/narrowphase.h>
-#include <geometric_shapes/shapes.h>
-#include <geometric_shapes/shape_operations.h>
-
+#include <kdl/treefksolverpos_recursive.hpp>
+#include <urdf_model/model.h>
 #include <tf/transform_broadcaster.h>
 
-#include <vector>
 
 namespace distance {
 
